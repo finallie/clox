@@ -286,8 +286,34 @@ static ParseRule *getRule(TokenType type) {
     return &rules[type];
 }
 
+static void synchronize() {
+    parser.panicMode = false;
+
+    while (parser.current.type != TOKEN_EOF) {
+        if (parser.previous.type == TOKEN_SEMICOLON) return;
+        switch (parser.current.type) {
+            case TOKEN_CLASS:
+            case TOKEN_FUN:
+            case TOKEN_VAR:
+            case TOKEN_FOR:
+            case TOKEN_IF:
+            case TOKEN_WHILE:
+            case TOKEN_PRINT:
+            case TOKEN_RETURN:
+              return;
+
+            default:
+                ; // Do nothing.
+        }
+
+        advance();
+    }
+}
+
 static void declaration() {
     statement();
+
+    if (parser.panicMode) synchronize();
 }
 
 static void printStatement() {
@@ -296,9 +322,17 @@ static void printStatement() {
     emitByte(OP_PRINT);
 }
 
+static void expressionStatement() {
+    expression();
+    consume(TOKEN_SEMICOLON, "Expect ';' after expression.");
+    emitByte(OP_POP);
+}
+
 static void statement() {
     if (match(TOKEN_PRINT)) {
         printStatement();
+    } else {
+        expressionStatement();
     }
 }
 
