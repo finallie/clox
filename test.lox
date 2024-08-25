@@ -1,6 +1,5 @@
-var a = 1;
-{
-    var a = 2;
-    print a; // 2
+if (false) {
+    print "true";
+} else {
+    print "false";
 }
-print a;
