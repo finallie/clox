@@ -1,5 +1,5 @@
-if (2 > 1 and 3 > 2) {
-    print "true";
-} else {
-    print "false";
+var i = 0;
+while(i<3) {
+  print i;
+  i = i + 1;
 }
