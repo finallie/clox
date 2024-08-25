@@ -1,4 +1,4 @@
-if (false) {
+if (2 > 1 and 3 > 2) {
     print "true";
 } else {
     print "false";
